@@ -1,111 +1,84 @@
-// Интерфейс товара, приходящего с API и отображаемого в UI
+// === Вспомогательные типы ===
+export type PaymentMethods = 'card' | 'cash' | '';
+export type CategoryType = 'софт-скилл' | 'хард-скилл' | 'другое' | 'кнопка' | 'доп';
+
+// Глобальное состояние приложения
+export interface IAppState {
+  catalog: IProduct[];
+  order: IOrder | null;
+  basket: IProduct[] | null;
+  preview: string | null;
+  loading: boolean;
+}
+
+// Продукт из API
 export interface IProduct {
-    id: string;
-    title: string;
-    description: string;
-    image: string;
-    category: string;
-    price: number;
-  }
-  
-  // Интерфейс данных для оформления заказа
-  export interface IOrder {
-    payment: PaymentMethod;
-    address: string;
-    email: string;
-    phone: string;
-    items: string[]; // id товаров
-  }
-  
-  // Результат заказа от API
-  export interface IOrderResult {
-    id: string;
-    total: number;
-  }
-  
-  // Способы оплаты
-  export type PaymentMethod = 'card' | 'cash';
-  
-  // Структура формы контактов 
-  export interface IContactsForm {
-    email: string;
-    phone: string;
-  }
-  
-  // Структура формы адреса и способа оплаты
-  export interface IOrderForm {
-    address: string;
-    payment: PaymentMethod;
-  }
-  
-  // Структура ошибок валидации
-  export interface IFormErrors {
-    address?: string;
-    email?: string;
-    phone?: string;
-  }
-  
-  // Интерфейс API-клиента
-  export interface IApi {
-    getProductList(): Promise<IProduct[]>;
-    order(data: IOrder): Promise<IOrderResult>;
-  }
-  
-  // Интерфейсы моделей
-  export interface IProductModel {
-    setProducts(products: IProduct[]): void;
-    getProductById(id: string): IProduct | undefined;
-  }
-  
-  export interface IBasketModel {
-    addItem(product: IProduct): void;
-    removeItem(id: string): void;
-    getItems(): IProduct[];
-    getTotal(): number;
-    setOrderForm(data: IOrderForm): void;
-    setContactsForm(data: IContactsForm): void;
-    validateStep1(): boolean;
-    validateStep2(): boolean;
-    getOrderData(): IOrder;
-  }
-  
-  // Интерфейсы представлений
-  export interface IView<T> {
-    render(data: T): void;
-    clear(): void;
-  }
-  
-  export interface ICatalogView extends IView<IProduct[]> {}
-  export interface IBasketView extends IView<IProduct[]> {}
-  export interface ICardView extends IView<IProduct> {
-    toggleSelected(id: string): void;
-  }
-  export interface IModalView {
-    open(content: HTMLElement): void;
-    close(): void;
-  }
-  export interface IOrderFormView {
-    renderStep1(data: IOrderForm): void;
-    renderStep2(data: IContactsForm): void;
-  }
-  export interface IFormErrorsView {
-    show(errors: IFormErrors): void;
-    clear(): void;
-  }
-  
-  // Перечисления событий UI и модели
-  export enum UiEvents {
-    CardSelect = 'card:select',
-    CardAdd = 'card:add',
-    CardRemove = 'card:remove',
-    BasketOpen = 'basket:open',
-    OrderSubmit = 'order:submit',
+  id: string;
+  description: string;
+  image: string;
+  title: string;
+  category: CategoryType;
+  price: number | null;
+}
+
+// Представление страницы
+export interface IPage {
+  counter: number;
+  items: HTMLElement[];
+}
+
+// Карточка товара в галерее
+export interface ICard {
+  id: string;
+  title: string;
+  category: string;
+  description: string;
+  image: string;
+  price: number | null;
+  selected: boolean;
+  button: string;
+}
+
+// Представление корзины
+export interface IBasket {
+  list: HTMLElement[];
+  price: number;
+}
+
+// Части формы оформления заказа
+export interface IOrderContacts {
+  email: string;
+  phone: string;
+}
+
+export interface IOrderDeliveryForm {
+  payment: PaymentMethods;
+  address: string;
+}
+
+// Полный заказ
+export interface IOrder extends IOrderContacts, IOrderDeliveryForm {
+  items: string[];
+  total: number;
+}
+
+// Ответ от сервера после оформления
+export interface IOrderSuccess {
+  id: string;
+  total: number;
+}
+
+// Событийная архитектура
+export enum UiEvents {
+    CardClick = 'card:click',
+    AddToBasket = 'basket:add',
+    RemoveFromBasket = 'basket:remove',
+    SubmitOrder = 'order:submit',
   }
   
   export enum ModelEvents {
-    ProductsLoaded = 'products:loaded',
-    BasketChanged = 'basket:changed',
-    OrderReady = 'order:ready',
-    OrderCompleted = 'order:completed',
+    CatalogUpdated = 'catalog:update',
+    BasketUpdated = 'basket:update',
+    OrderCompleted = 'order:complete',
   }
   
