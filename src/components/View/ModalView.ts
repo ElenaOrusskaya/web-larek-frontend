@@ -38,7 +38,7 @@ export class ModalView {
 
 			if (
 				target.classList.contains('modal__close') ||
-				target.classList.contains('modal') // клик по оверлею
+				target.classList.contains('modal')
 			) {
 				this.events.emit('card:preview:close');
 			}

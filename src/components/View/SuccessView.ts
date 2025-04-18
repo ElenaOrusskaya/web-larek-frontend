@@ -29,6 +29,6 @@ export class SuccessView extends BaseView<{ total: string }> {
 	}
 
 	set total(value: string) {
-		this.descriptionElement.textContent = `Списано ${value}`;
+		this.descriptionElement.textContent = value;
 	}
 }

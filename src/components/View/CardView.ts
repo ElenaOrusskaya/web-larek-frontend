@@ -30,7 +30,8 @@ export class CardView extends BaseView<{ product: IProduct }> {
 	set product(data: IProduct) {
 		this.data = data;
 		this.titleElement.textContent = data.title;
-		this.priceElement.textContent = `${data.price} синапсов`;
+		this.priceElement.textContent =
+			data.price === null ? 'Бесценный' : `${data.price} синапсов`;
 		this.imageElement.src = data.image;
 		this.categoryElement.textContent = data.category;
 

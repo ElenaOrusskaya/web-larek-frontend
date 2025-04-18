@@ -155,7 +155,6 @@ events.on('order:submit', (data: { email: string; phone: string }) => {
 	orderModel.setStep2(data);
 
 	const order = orderModel.getOrder();
-
 	api.postOrder(order).then((result: IOrderResult) => {
 		const success = successView.render({
 			total: `${result.total} синапсов`,

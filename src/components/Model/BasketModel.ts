@@ -29,7 +29,7 @@ export class BasketModel {
 	}
 
 	getTotal(): number {
-		return this.items.reduce((total, item) => total + item.price, 0);
+		return this.items.reduce((total, item) => total + (item.price ?? 0), 0);
 	}
 
 	getState(): IBasketState {

@@ -32,17 +32,55 @@ export class CardPreviewView extends BaseView<{ product: IProduct }> {
 
 	set product(data: IProduct) {
 		this.data = data;
-		this.titleElement.textContent = data.title;
-		this.descriptionElement.textContent = data.description;
-		this.imageElement.src = data.image;
-		this.categoryElement.textContent = data.category;
-		this.priceElement.textContent = `${data.price} синапсов`;
+		this.render({ product: data });
+	}
 
+	render(data: { product: IProduct }): HTMLElement {
+		this.data = data.product;
+		this.setTitle(data.product.title);
+		this.setDescription(data.product.description);
+		this.setImage(data.product.image);
+		this.setCategory(data.product.category);
+		this.setPrice(data.product.price);
+		this.setButton(data.product);
+		return this.element;
+	}
+
+	setTitle(title: string) {
+		this.titleElement.textContent = title;
+	}
+
+	setDescription(description: string) {
+		this.descriptionElement.textContent = description;
+	}
+
+	setImage(image: string) {
+		this.imageElement.src = image;
+	}
+
+	setCategory(category: string) {
+		this.categoryElement.textContent = category;
+	}
+
+	setPrice(price: number | null) {
+		this.priceElement.textContent =
+			price === null ? 'Бесценный' : `${price} синапсов`;
+	}
+
+	setButton(data: IProduct) {
+		if (data.price === null) {
+			this.buttonElement.setAttribute('disabled', 'true');
+			this.buttonElement.classList.add('button_disabled');
+			return;
+		}
+
+		this.buttonElement.removeAttribute('disabled');
+		this.buttonElement.classList.remove('button_disabled');
 		this.buttonElement.addEventListener('click', () => {
 			this.events.emit('card:add', {
-				id: this.data.id,
-				title: this.data.title,
-				price: this.data.price,
+				id: data.id,
+				title: data.title,
+				price: data.price,
 			});
 		});
 	}

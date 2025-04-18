@@ -38,22 +38,28 @@ export class BasketView extends BaseView<{
 			const li = document.createElement('li');
 			li.classList.add('basket__item', 'card', 'card_compact');
 
-			li.innerHTML = `
-        <span class="basket__item-index">${index + 1}</span>
-        <span class="card__title">${item.title}</span>
-        <span class="card__price">${item.price} синапсов</span>
-        <button class="basket__item-delete" data-id="${
-					item.id
-				}" aria-label="удалить"></button>
-      `;
+			const indexEl = document.createElement('span');
+			indexEl.classList.add('basket__item-index');
+			indexEl.textContent = (index + 1).toString();
 
-			li.querySelector('.basket__item-delete')!.addEventListener(
-				'click',
-				() => {
-					this.events.emit('basket:item:remove', { id: item.id });
-				}
-			);
+			const titleEl = document.createElement('span');
+			titleEl.classList.add('card__title');
+			titleEl.textContent = item.title;
 
+			const priceEl = document.createElement('span');
+			priceEl.classList.add('card__price');
+			priceEl.textContent =
+				item.price == null ? 'Бесценный' : `${item.price} синапсов`;
+
+			const deleteBtn = document.createElement('button');
+			deleteBtn.classList.add('basket__item-delete');
+			deleteBtn.setAttribute('data-id', item.id);
+			deleteBtn.setAttribute('aria-label', 'удалить');
+			deleteBtn.addEventListener('click', () => {
+				this.events.emit('basket:item:remove', { id: item.id });
+			});
+
+			li.append(indexEl, titleEl, priceEl, deleteBtn);
 			this.listElement.append(li);
 		});
 	}

@@ -1,5 +1,6 @@
 import { IProduct } from '../../types/index';
 import { IEvents } from '../base/events';
+import { CDN_URL } from '../../utils/constants';
 
 export class ProductModel {
 	protected items: IProduct[] = [];
@@ -8,7 +9,10 @@ export class ProductModel {
 	constructor(protected events: IEvents) {}
 
 	setItems(items: IProduct[]): void {
-		this.items = items;
+		this.items = items.map((item) => ({
+			...item,
+			image: `${CDN_URL}/${item.image}`,
+		}));
 		this.events.emit('products:changed');
 	}
 
